@@ -1,0 +1,28 @@
+<html xmlns:th="http://www.thymeleaf.org" th:replace="base::layout(~{::section})">
+
+<head>
+	<meta charset="ISO-8859-1">
+	<title>title</title>
+</head>
+
+<body>
+	<section>
+		<div th:if="${session.message}" th:classappend="${session.message.type}" class="alert alert-dismissible"
+			role="alert">
+			<p th:text="${session.message.content}"></p>
+			<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+			<th:block th:text="${#session.removeAttribute('message')}"></th:block>
+		</div>
+
+		<div class="banner d-flex justify-content-center align-items-center">
+			<div class="text-center">
+				<h2 class="font-weight-bold">Transfer Locally</h2>
+
+				<p>Transfer File Between Computer and Mobile Device easily</p>
+				<a href="/transfer"><button
+						class="btn bg-primary btn-lg text-white">Get Started</button></a>
+			</div>
+		</div>
+	</section>
+</body>
+</html>

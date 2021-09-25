@@ -1,0 +1,69 @@
+<html xmlns:th="http://www.thymeleaf.org"
+	th:replace="base::layout(~{::section})">
+
+<head>
+<meta charset="ISO-8859-1">
+<title>title</title>
+</head>
+
+<body>
+	<section>
+		<div class="container">
+			<div class="col-md-12">
+				<div class="my-card mt-2">
+					<div th:if="${session.message}"
+						th:classappend="${session.message.type}"
+						class="alert alert-dismissible" role="alert">
+						<p th:text="${session.message.content}"></p>
+						<button type="button" class="btn-close" data-bs-dismiss="alert"
+							aria-label="Close"></button>
+						<th:block th:text="${#session.removeAttribute('message')}"></th:block>
+					</div>
+					<h2 class="text-center">Upload Window</h2>
+					<form th:action="@{/transfer/upload}" id="uploadForm" method="post"
+						enctype="multipart/form-data" th:object="${form}">
+						<div class="input-group mt-5">
+							<input type="file" class="form-control" id="fileUpload"
+								name="fileUpload" aria-label="Upload">
+							<button class="btn btn-secondary" type="submit">Upload</button>
+						</div>
+					</form>
+				</div>
+				<!-- 				Download windows Starts here -->
+				<div class="my-card mt-2" th:if="not ${files.isEmpty()}">
+					<div class="table-responsive">
+						<table
+							class="table caption-top table-hover table-success table-striped table-bordered border-secondary align-middle table-fit">
+							<caption class="text-center mytable table-dark mb-2 mt-2 h3">
+								Download Windows</caption>
+							<thead class="table-warning">
+								<tr>
+									<th scope="col" style="width: 1px; white-space: nowrap;">SR
+										No</th>
+									<th scope="col">File Name</th>
+									<th scope="col">Action</th>
+								</tr>
+							</thead>
+							<tbody>
+
+								<tr th:each="file,iState:${files}">
+									<th scope="row" th:text="${iState.index+1}"></th>
+									<td th:text="${file.value}"></td>
+									<td style="width: 1px; white-space: nowrap;"><a
+										th:href="@{'download/'+${file.key}}" role="button"
+										class="btn btn-outline-primary">Download</a> <a
+										th:href="@{'delete/'+${file.key}}" role="button"
+										class="btn btn-outline-danger">Delete</a></td>
+
+								</tr>
+								</th:block>
+							</tbody>
+						</table>
+
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+</body>
+</html>
