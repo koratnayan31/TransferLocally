@@ -1,10 +1,13 @@
 package com.nayan.controller;
 
+import java.io.File;
+
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.FileSystemUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.nayan.helper.FileStorageRecord;
 import com.nayan.helper.FileUploader;
 import com.nayan.helper.Message;
+import com.nayan.helper.SystemProps;
 
 @Controller
 public class HomeController {
@@ -55,10 +59,18 @@ public class HomeController {
 		return "redirect:/transfer";
 	}
 	
-	@PostMapping("/delete/{id}")
+	@GetMapping("/delete/{id}")
 	public String delete(@PathVariable("id") int id,HttpSession session)
 	{
-		
+		boolean deleted=FileSystemUtils.deleteRecursively(new File(FileStorageRecord.getFilePath(id)));
+		if(deleted)
+		{
+			FileStorageRecord.failureFallback(id);
+			session.setAttribute("message",new Message("File deleted successfully","alert-success"));
+		}else
+		{
+			session.setAttribute("message",new Message("Something went wrong. File can not be deleted","alert-danger"));
+		}
 		return "redirect:/transfer";
 	}
 }
