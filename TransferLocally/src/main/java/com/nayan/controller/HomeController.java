@@ -62,15 +62,24 @@ public class HomeController {
 	@GetMapping("/delete/{id}")
 	public String delete(@PathVariable("id") int id,HttpSession session)
 	{
-		boolean deleted=FileSystemUtils.deleteRecursively(new File(FileStorageRecord.getFilePath(id)));
-		if(deleted)
+		boolean deleted=false;
+		if(FileStorageRecord.containsFile(id))
 		{
-			FileStorageRecord.failureFallback(id);
-			session.setAttribute("message",new Message("File deleted successfully","alert-success"));
-		}else
-		{
-			session.setAttribute("message",new Message("Something went wrong. File can not be deleted","alert-danger"));
+			deleted=FileSystemUtils.deleteRecursively(new File(FileStorageRecord.getFilePath(id)));
+			if(deleted)
+			{
+				FileStorageRecord.failureFallback(id);
+				session.setAttribute("message",new Message("File deleted successfully","alert-success"));
+			}else
+			{
+				session.setAttribute("message",new Message("Something went wrong. File can not be deleted","alert-danger"));
+			}
 		}
+		else
+		{
+			session.setAttribute("message",new Message("Requested file can not be deleted as file does not exist","alert-danger"));
+		}
+		
 		return "redirect:/transfer";
 	}
 }

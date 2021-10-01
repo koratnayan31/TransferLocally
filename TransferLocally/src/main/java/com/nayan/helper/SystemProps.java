@@ -37,10 +37,14 @@ public final class SystemProps {
 			ex.printStackTrace();
 		}
 		System.out.println("Temporary Directory created at "+path);
+	}
+	private static void configureIPDetail()
+	{
 		try
 		{
 			ip=InetAddress.getLocalHost();
-			System.out.println("Transfer server started at:"+ip.toString().substring(ip.toString().lastIndexOf("/")+1)+":8080");
+			System.out.println(ip.getHostAddress());
+			System.out.println("Transfer server started at: "+ip.getHostAddress()+":8080");
 			System.out.println("Type above address in your any browser to Intialize Transfering file");
 		}catch(UnknownHostException ex)
 		{
@@ -54,6 +58,11 @@ public final class SystemProps {
 		return path;
 	}
 	
+	public static String getLocalIP()
+	{
+		configureIPDetail();
+		return ip.getHostAddress();
+	}
 	
 	//static block to check OS
 	{
@@ -69,6 +78,7 @@ public final class SystemProps {
 		else
 			osId = 3;
 		configurePath();
+		configureIPDetail();
 	}
 
 }
